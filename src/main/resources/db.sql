@@ -446,7 +446,7 @@ VALUES
 
     (9, 'Approach the mirror', 16, NULL),
     (9, 'Search the room for something useful', 17, NULL),
-    (9, 'Leave the room and try another door', 9, NULL),
+    (9, 'Leave the room and try another door', 4, NULL),
 
     (10, 'Remove the painting from the wall', 18, NULL),
     (10, 'Step back and leave the living room', 5, NULL),
