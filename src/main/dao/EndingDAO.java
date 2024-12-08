@@ -8,7 +8,7 @@ import java.util.List;
 public class EndingDAO implements DAO<Ending> {
     @Override
     public Ending get(int id) {
-        String query = "SELECT * FROM ending WHERE id = ?";
+        String query = "SELECT * FROM endings WHERE id = ?";
         try (Connection connection = DBConnection.getConnection()) {
             assert connection != null;
             try (java.sql.PreparedStatement preparedStatement = connection.prepareStatement(query)) {
