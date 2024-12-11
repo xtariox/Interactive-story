@@ -12,10 +12,11 @@ import java.awt.event.ActionListener;
  * The storyViewer class represents the main GUI for the interactive story application.
  * It extends JFrame and provides a window to display chapters and choices.
  */
-public class storyViewer extends JFrame {
+public class StoryViewer extends JFrame {
     private JPanel contentPanel, choicePanel;
     private JLabel titleLabel;
-    private JTextArea contentArea;
+    private JScrollPane contentScrollPane;
+    private JEditorPane contentArea;
 
     private ChapterDAO chapterDAO = new ChapterDAO();
     private EndingDAO endingDAO = new EndingDAO();
@@ -24,7 +25,7 @@ public class storyViewer extends JFrame {
     /**
      * Constructs a new storyViewer window.
      */
-    public storyViewer() {
+    public StoryViewer() {
         setTitle("Interactive Story");
         setSize(800, 600);
         setLayout(new BorderLayout());
@@ -48,15 +49,20 @@ public class storyViewer extends JFrame {
         contentPanel.add(titleLabel, BorderLayout.NORTH);
 
         // Chapter Content
-        contentArea = new JTextArea();
+        contentArea = new JEditorPane();
         contentArea.setEditable(false);
-        contentArea.setLineWrap(true);
-        contentArea.setWrapStyleWord(true);
+        contentArea.setContentType("text/html");
         contentArea.setBorder(BorderFactory.createEmptyBorder(40, 20, 20, 20));
         contentArea.setBackground(Color.BLACK);
         contentArea.setForeground(Color.WHITE);
         contentArea.setFont(new Font("Monaco", Font.PLAIN, 12));
         contentPanel.add(contentArea, BorderLayout.CENTER);
+
+        // Add a JScrollPane to the contentArea
+        contentScrollPane = new JScrollPane(contentArea);
+        contentScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        contentPanel.add(contentScrollPane, BorderLayout.CENTER);
+        contentScrollPane.setBorder(BorderFactory.createEmptyBorder());
 
         // Choices Panel with increased height
         choicePanel = new JPanel();
@@ -79,7 +85,10 @@ public class storyViewer extends JFrame {
         currentChapter = chapterDAO.get(chapterId);
         if (currentChapter != null) {
             titleLabel.setText(currentChapter.getTitle());
-            contentArea.setText(currentChapter.getContent());
+            String content = "<p>" + currentChapter.getContent() + "</p>";
+            content = content.replace("\n", "</p><p>");
+            // Set color and font for the content
+            contentArea.setText("<html><body style='color:white; font-family:Monaco; font-size:12pt'>" + content + "</body></html>");
             updateChoices(currentChapter.getChoices());
         } else {
             showEnding(chapterId);
@@ -141,7 +150,10 @@ public class storyViewer extends JFrame {
         Ending ending = endingDAO.get(endingId);
         if (ending != null) {
             titleLabel.setText("The End: " + ending.getTitle());
-            contentArea.setText(ending.getContent());
+            String content = "<p>" + ending.getContent() + "</p>";
+            content = content.replace("\n", "</p><p>");
+            // Set color and font for the content
+            contentArea.setText("<html><body style='color:white; font-family:Monaco; font-size:12pt'>" + content + "</body></html>");
             choicePanel.removeAll();
         } else {
             titleLabel.setText("Error");
@@ -183,7 +195,7 @@ public class storyViewer extends JFrame {
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            storyViewer viewer = new storyViewer();
+            StoryViewer viewer = new StoryViewer();
             viewer.setVisible(true);
         });
     }
